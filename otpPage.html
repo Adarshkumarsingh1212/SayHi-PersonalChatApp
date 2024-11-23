@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>OTP Verification</h2>
+        <input type="text" id="phoneNumber" placeholder="Enter Phone Number" required />
+        <div id="recaptcha-container"></div>
+        <button onclick="sendOTP()">Send OTP</button>
+        <input type="text" id="otp" placeholder="Enter OTP" required />
+        <button onclick="verifyOTP()">Verify OTP</button>
+    </div>
+
+    <script src="firebase-config.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.9.0/firebase-auth.js"></script>
+    <script>
+        const recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+            'size': 'invisible'
+        });
+
+        function sendOTP() {
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            firebase.auth().signInWithPhoneNumber(phoneNumber, recaptchaVerifier)
+                .then((confirmationResult) => {
+                    window.confirmationResult = confirmationResult;
+                    alert('OTP sent to your phone');
+                })
+                .catch((error) => {
+                    alert('Error: ' + error.message);
+                });
+        }
+
+        function verifyOTP() {
+            const otp = document.getElementById('otp').value;
+            const credential = firebase.auth.PhoneAuthProvider.credential(window.confirmationResult.verificationId, otp);
+            firebase.auth().signInWithCredential(credential)
+                .then((result) => {
+                    alert('OTP verified successfully');
+                    window.location.href = 'roleSelection.html'; // Redirect to Role Selection page
+                })
+                .catch((error) => {
+                    alert('OTP verification failed, please try again');
+                });
+        }
+    </script>
+</body>
+</html>
