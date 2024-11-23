@@ -9,34 +9,5 @@ const firebaseConfig = {
   measurementId: "G-VCXEC0DBB1"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-function submitForm() {
-  const name = document.getElementById('name').value;
-  const dob = new Date(document.getElementById('dob').value);
-  const phone = document.getElementById('phone').value;
-
-  if (name && dob && phone) {
-    const today = new Date();
-    let age = today.getFullYear() - dob.getFullYear();
-    const m = today.getMonth() - dob.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
-      age--;
-    }
-    document.getElementById('ageDisplay').innerText = `Your Age: ${age}`;
-    document.getElementById('popup').style.display = 'block';
-  } else {
-    alert('Please fill all fields!');
-  }
-}
-
-function verifyOTP() {
-  const otp = document.getElementById('otp').value;
-  if (otp === '1234') {
-    alert('OTP Verified!');
-    window.location.href = 'roleSelection.html';
-  } else {
-    alert('Invalid OTP. Try Again!');
-  }
-}
+//initialize Firebase
+firebase.initializeApp(firebaseCongig);
